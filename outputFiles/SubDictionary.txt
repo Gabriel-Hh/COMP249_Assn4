@@ -1,5 +1,5 @@
 Sub-Dictionary of PersonOfTheCentury.txt.
-Contains 447 entries.
+Contains 446 entries.
 
 A
 ==
@@ -268,7 +268,6 @@ MASTER
 MASTERY
 MATHEMATICS
 MATTER
-MC²
 ME
 MEDIOCRE
 MIDDLE

@@ -10,9 +10,10 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import java.awt.Desktop;
+import java.util.regex.Pattern;
+
+
 
 //import java.util.ArrayList;
 //import java.util.Scanner;
@@ -62,13 +63,14 @@ public class subDictionaryCreator {
 	key.nextLine();
 	
 	pullEligibleWords();
-	System.out.println("Word count: " + inputWordCount);
-	System.out.println(subDictionary.size());
+	System.out.println("Input Word count: " + inputWordCount);
+	System.out.println("Eligible words: " + subDictionary.size());
 	
 	sortDictionary();
 
 	subDictionary = deleteDuplicates();
-	System.out.println(subDictionary.size());
+	System.out.println("Sub-Dictionary length: " + subDictionary.size());
+	System.out.println();
 
 	writeOutputFile();
 	System.out.println("Sub-Dictionary created successfully.");
@@ -104,6 +106,7 @@ public class subDictionaryCreator {
   protected static void selectSourceFile() {
 	System.out.println("Enter file name to process: ");
 	sourceFileName = key.next();
+	key.nextLine();
 	try {
 	  File selectedFile = new File(sourceDirectory + "/" + sourceFileName);
 	  fr = new Scanner(new FileInputStream(selectedFile));
@@ -152,15 +155,17 @@ public class subDictionaryCreator {
 //NOT WORKING	if (word.matches("mc²")) { //Einstein special ((M|m)(c|C)(²|^2)) // NOT WORKING
 //		 subDictionary.add(word.substring(0,2).toUpperCase() + word.substring(2)); 
 //		}
-//NOT WORKING	else if(word.matches("([0-9]+)")) {log.println("number: " + word);} // Excludes words with digits
+	
 		if (word.matches(("([a-zA-z-]){1,}([?.,:;’'])"))) {// ([a-zA-z-]){1,}([?.,:;'’]) Words ending with special characters
 		   word = word.substring(0, word.length()-1);
 		  subDictionary.add(word.toUpperCase());
 		} 
-//NOT WORKING		else if (specialCharMatch(word)) {
-//		  pw.println("matcher: "+ word);
-//		  subDictionary.add(word.toUpperCase());
-//		}
+//NOT WORKING else if(word.matches("([0-9]+)")) {log.println("number: " + word);} // Excludes words with digits
+		
+	else if (specialCharMatch(word)) {
+		  pw.println("matcher: "+ word);
+		  subDictionary.add(word.toUpperCase());
+		}
 		else if (word.matches("(a|A|I|i)")) { // permitted 1-letter words
 		  subDictionary.add(word.toUpperCase()); 
 		}
@@ -254,7 +259,7 @@ public class subDictionaryCreator {
    */
   
   protected static boolean specialCharMatch(String word) {
-	Pattern specialChar = Pattern.compile("\\d",Pattern.UNICODE_CHARACTER_CLASS); 
+	Pattern specialChar = Pattern.compile("mc²"); 
 	Matcher matcher = specialChar.matcher(word);
 	return matcher.matches();
   }
