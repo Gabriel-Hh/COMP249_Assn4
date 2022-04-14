@@ -30,6 +30,15 @@ public  class CellListUtilization {
 	
 	list1.showContents();
 	
+	System.out.println("Would you like to test Exceptions now?"
+		+ "\n1.Yes"
+		+ "\n2.No");
+	String testE = key.next();
+	key.nextLine();
+	if (testE.equalsIgnoreCase("1")|testE.equalsIgnoreCase("yes")) {
+	  //TODO ADD EXCEPTIONS HERE
+	}
+	
 	System.out.println("Deleting the first element with deleteFromStart()");
 	stall();
 	list1.deleteFromStart();
@@ -43,9 +52,9 @@ public  class CellListUtilization {
 	else {System.out.println("Serial number found after " + list1.getIteration() + " iterations.");}
 	
 	System.out.println();
-	System.out.println("Creating a new phone with these parameters: 12345678,\"IPhony\",199.9927,2023");
+	System.out.println("Creating a new phone with these parameters: 1234567,\"IPHONY\",199.9927,2023");
 	
-	CellPhone new1 = new CellPhone(12345678,"IPhony",199.9927,2023);
+	CellPhone new1 = new CellPhone(1234567,"IPHONY",199.9927,2023);
 	
 	System.out.println("\nAdding this phone to list1, second index.");
 	stall();
@@ -72,7 +81,7 @@ public  class CellListUtilization {
 	System.out.println("\nAdd it to the 5th index of an empty list:");
 	stall();
 	list2.insertAtIndex(new1, 0);
-	list2.addToStart(new1);
+	list2.addToStart(new1.clone());
 	list2.showContents();
 	
 	System.out.println("Test: clone() a CellPhone and add it to the list.");
@@ -118,4 +127,9 @@ public  class CellListUtilization {
 	System.out.println("Press ENTER to continue..");
 	key.nextLine();
   }
+
+  public static void runException(CellList list) {
+	System.out.println("");
+  }
 }
+

@@ -1,5 +1,6 @@
 package pk2;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -15,6 +16,18 @@ public class CellPhone {
   protected String brand;
   protected double price;
   protected int year;
+  public static ArrayList<Long> serials= new ArrayList<>();
+  
+  /**
+   * 
+   * @return Unique 7-digit serial number.
+   */
+  private Long generateSerial() {
+	Long unique = (long) (Math.random()*10000000);
+	if(serials.contains(unique)) unique = generateSerial();
+	System.out.println("Warning: Serial number collision, replaced by: " + unique + ".");
+	return unique;
+  }
   
   /**
    * 
@@ -24,10 +37,15 @@ public class CellPhone {
    * @param price
    */
   public CellPhone(long serialNumber, String brand, double price, int year) {
-	this.serialNumber = serialNumber;
+	if(serials.contains(serialNumber)) {
+	  this.serialNumber = generateSerial();
+	  System.out.println("Warning: Serial number collision: "+ serialNumber +" replaced by: " + this.serialNumber + ".");
+	}
+	else { this.serialNumber = serialNumber;}
 	this.brand = brand;
 	this.year = year;
 	this.price = price;
+	serials.add(this.serialNumber);
   }
   
   /**
@@ -35,21 +53,28 @@ public class CellPhone {
    * @param toCopy
    * @param newSerial
    */
-  public CellPhone(CellPhone toCopy, long newSerial) {
-	serialNumber = newSerial;
+  public CellPhone(CellPhone toCopy, long serialNumber) {
+	if(serials.contains(serialNumber)) {
+	  this.serialNumber = generateSerial();
+	  System.out.println("Warning: Serial number collision: "+ serialNumber +" replaced by: " + this.serialNumber + ".");
+	}
+	else {this.serialNumber = serialNumber;}
 	brand = toCopy.brand;
 	year = toCopy.year;
 	price = toCopy.price;
   }
   
-  public CellPhone clone() {
+  public CellPhone cloneManual() {
 	Scanner key = new Scanner(System.in);
-	System.out.print("Enter unique Serial Number (ddddddd):");
+	System.out.print("Enter unique Serial Number (7-digits): ");
 	long newSerial = key.nextLong();
 	key.nextLine();
 	return new CellPhone(this, newSerial);
   }
 
+  public CellPhone clone() {
+	return new CellPhone(this,generateSerial());
+  }
   /**
    * @return the serialNumber
    */
@@ -114,8 +139,6 @@ public class CellPhone {
 
   @Override
   public boolean equals(Object obj) {
-	if (this == obj)
-	  return true;
 	if (obj == null)
 	  return false;
 	if (getClass() != obj.getClass())
@@ -127,7 +150,7 @@ public class CellPhone {
   
   @Override
   public String toString() {
-	return String.format("[%d: %s %#.2f$ %d]",serialNumber,brand,price,year);//#-flag forces printing 'float.00' to specified precision
+	return String.format("[%-8d: %-12s %#.2f$ %d]",serialNumber,brand,price,year);//#-flag forces printing 'float.00' to specified precision
   }
   //////////////////// test ////////////////////
   public static void main(String[] args) {

@@ -8,22 +8,23 @@ import pk2.CellPhone;
 /**
  * 
  * @author Gabriel Horth
- * @verion 1.0
+ * @verion 1.1
  * @see pk2.CellPhone
  */
 public class CellList {
   
   private CellNode head;
   private int size;
-  private int iteration = 0; //Used as 'static' variable for CellNode methods. Compared to size to signal error.
-  private int listIndex = 0; //Used as 'static' variable for CellNode methods. Compared to 'index' arg and size
-  private String listToString; //Used and returned by iterPrint() in CellNode to minimize recursive String creation.
+  private int iteration = 0; //Used as 'static' variable for CellNode iterative methods. Compared to size to signal error.
+  private int listIndex = 0; //Used as 'static' variable for CellNode index methods. Compared to 'index' parameter and size
+  //private String listToString; //Used and returned by iterPrint() in CellNode to minimize recursive String creation.
   
-/////////////////////// class CellNode //////////////////////////////
+/////////////////////// CLASS CELLNODE //////////////////////////////
   /**
-   * 
+   * Inner Class CellNode contains data and pointer to next CellNode.
+   * Mostly private methods to manipulate and navigate through a CellList.
    * @author Gabriel Horth
-   * @version 1.0
+   * @version 1.1
    *
    */
   private class CellNode{
@@ -34,7 +35,8 @@ public class CellList {
 	/**
 	 * 
 	 */
-	private CellNode() {
+	
+private CellNode() {
 	  cellPhone = null;
 	  pointer = null;
 	}
@@ -86,7 +88,8 @@ public class CellList {
 	  //TODO
 	  this.pointer = pointer;
 	}
-	 
+	
+	//TODO remove this once iterative fucntional.
 	//!!WARNING: returns reference to mutable object.
 	private CellNode moveTo(int index) {
 	  if(index == listIndex) {return this;}
@@ -94,6 +97,7 @@ public class CellList {
 	  return pointer.moveTo(index);
 	}
 	
+	//TODO remove this once iterative fucntional.
 	//!!WARNING: returns reference to mutable object.
 	private CellNode search(long serialNumber) {
 	  iteration++;
@@ -102,22 +106,43 @@ public class CellList {
 	  if (pointer == null | getIteration() > size) return null;
 	  return pointer.search(serialNumber);
 	}
+	//TODO remove this once iterative fucntional.
+	private String iterPrint() {
+	  iteration = 0;
+	  String listToString = "";
+	  CellNode pos = this;
+	  while(pos != null){
+		if(getIteration() > size) 
+		  return "Error: List contains a loop, toString() failure.";
+		if(iteration % 3 == 0) 
+		  listToString += "\n";
+		listToString += pos.cellPhone.toString() + " ---> ";
+		pos = pos.pointer;
+		iteration++;
+	  }
+	  listToString += "X";
+	  return listToString;
+	}
 	
- 	private String iterPrint() {
- 	  iteration++;
- 	  if(getIteration() > size) {return "Error: List contains a loop, toString() failure.";}
- 	  listToString += cellPhone.toString() + " ---> ";
- 	  if(getIteration() % 3 == 0) {listToString += "\n";}
- 	  if(pointer == null) {
- 		listToString += "X";
- 		return listToString;
- 	  }
- 	  
- 	  return pointer.iterPrint();
- 	  //return null;
+ 	
+ 	/**
+ 	 * Starting at each head, iterates through links comparing CellPhone equality.
+ 	 * @param otherHead CellList to compare to.
+ 	 * @return true if each CellNode contains equal CellPhones.
+ 	 */
+ 	private boolean iterEquals(CellNode otherHead) {
+ 	  CellNode first = head;
+	  CellNode other = otherHead;
+	  while(first != null) {
+		if(!(first.cellPhone.equals(other.cellPhone)))
+		  return false;
+		first = first.pointer;
+		other = other.pointer;
+	  }
+ 	  return true;
  	}
-	
-  }///////////////////// END class CellNode //////////////////////////////
+ 	
+  }///////////////////// END CLASS CELLNODE //////////////////////////////
   
   /**
    * 
@@ -231,16 +256,26 @@ public class CellList {
 		   + toString() +"\n");
   }
   
+  /**
+   * Determines if two CellLists are equal.
+   * Checks Type, null reference, and size then the calls CellNode iterEquals() method.
+   * @return true if CellLists are equal in content and order, ignores serialNumber.
+   */
   @Override
   public boolean equals(Object obj) {
-	//TODO
-	return false;
+	if(obj == null)
+	  return false;
+	if(obj.getClass() != getClass()) //???? Does this getClass() comparison take care of the null-check implicitly for an instance method?
+	  return false;
+	CellList other = (CellList)obj;
+	if(this.size != other.size)
+	  return false;
+	return (this.head).iterEquals(other.head);
   }
+  
   
   @Override
   public String toString() {
-	iteration = 0;
-	listToString = "";
    return head.iterPrint();
   }
 
