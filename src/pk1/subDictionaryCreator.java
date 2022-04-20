@@ -1,6 +1,6 @@
 package pk1;
 
-import java.awt.Desktop;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,19 +12,17 @@ import java.util.Date;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.awt.Desktop;
 
-
-
-//import java.util.ArrayList;
-//import java.util.Scanner;
-//import java.io.PrintWriter;
-//import java.io.FileOutputStream;
-//import java.io.FileInputStream;
-//import java.io.FileNotFoundException;
+//-----------------------------------------------------
+//Assignment 4
+//Question: A
+//Written by: Gabriel Horth, 40186942
+//-----------------------------------------------------
 
 
 /**
- * 
+ * Creates a sub-dictionary of words found in an input file.
  * @author Gabriel Horth
  * @version 1.0
  *String

@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","u":"allclasses-index.html"},{"p":"pk3","l":"CellList"},{"p":"pk4","l":"CellListUtilization"},{"p":"pk3","l":"CellList.CellNode"},{"p":"pk2","l":"CellPhone"},{"p":"pk1","l":"subDictionaryCreator"}];updateSearchResults();

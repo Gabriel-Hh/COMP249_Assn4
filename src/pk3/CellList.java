@@ -5,8 +5,15 @@ import java.util.Scanner;
 
 import pk2.CellPhone;
 
+//-----------------------------------------------------
+//Assignment 4
+//Question: B
+//Written by: Gabriel Horth, 40186942
+//-----------------------------------------------------
+
+
 /**
- * 
+ * CellList is a custom Linked-List class for CellPhone. Contains basis method to insert, delete, and search CellNodes. CellNodes are defined in inner class.
  * @author Gabriel Horth
  * @verion 1.1
  * @see pk2.CellPhone
@@ -27,13 +34,13 @@ public class CellList {
    * @version 1.1
    *
    */
-  private class CellNode{
+  public class CellNode{
 	
 	private CellPhone cellPhone;
 	private CellNode pointer;
 	
 	/**
-	 * 
+	 * Default Constructor for CellNode.
 	 */
 	
 private CellNode() {
@@ -42,7 +49,7 @@ private CellNode() {
 	}
 	
 	/**
-	 * 
+	 * Para-constructor for CellNode.
 	 */
 	private CellNode(CellPhone cellPhone, CellNode pointer) {
 	  this.cellPhone = cellPhone;
@@ -50,63 +57,102 @@ private CellNode() {
 	}
 	
 	/**
-	   * 
+	   * Copy Constructor for CellNode.
 	   */
 	private CellNode(CellNode toCopy) {
-	  //TODO
+	  cellPhone = toCopy.cellPhone.clone();
+	  if(toCopy.pointer == null) {
+		pointer = null;
+		return;
+	  }
+	  pointer = toCopy.pointer.clone();
 	}
-
+	
 	/**
+	 * CellNode clone() method.
+	 */
+	protected CellNode clone() {
+	  return new CellNode(this);
+	}
+	
+	//TODO
+	//!!WARNING: returns reference to a mutable Object.
+	// Must be keep public to use clone() in driver.
+	// To secure could create a public method that calls this method and clone together
+	// and make this method private instead.
+	/**Getter for a CellNode's CellPhone.
 	 * @return the cellPhone
 	 */
 	public CellPhone getCellPhone() {
-	  //TODO
 	  return cellPhone;
 	}
 
-	/**
+	/**Setter for a CellNode's CellPhone,
 	 * @param cellPhone the cellPhone to set
 	 */
 	public void setCellPhone(CellPhone cellPhone) {
-	  //TODO
 	  this.cellPhone = cellPhone;
 	}
 
-	//!!WARNING: returns reference to mutable object.
-	/**
-	 * @return the pointer
+
+	//TODO
+	//!!WARNING: returns reference to a mutable Object.
+	//However, this method is private and causes no security leak at the driver level.
+	/**Getter for a CellNode Pointer to next Node.
+	 * @return CellNode pointer.
 	 */
 	public CellNode getPointer() {
-	  //TODO
 	  return pointer;
 	}
 
-	/**
+	/**Setter for a CellNode's pointer to next CellNode.
 	 * @param pointer the pointer to set
 	 */
 	public void setPointer(CellNode pointer) {
-	  //TODO
 	  this.pointer = pointer;
 	}
 	
-	//TODO remove this once iterative fucntional.
+	//TODO
 	//!!WARNING: returns reference to mutable object.
+	//However, this method is private and causes no security leak at the driver level.
+	/**
+	 * Iterates accross CellList to desired index.
+	 * @param index
+	 * @return CellNode at that index.
+	 */
 	private CellNode moveTo(int index) {
-	  if(index == listIndex) {return this;}
-	  listIndex++;
-	  return pointer.moveTo(index);
+	  CellNode curr = this;
+	  while (curr != null) {
+		if(index == listIndex) 
+		  return curr;
+		curr = curr.pointer;
+		listIndex++;
+	  }
+	  return null;
 	}
 	
-	//TODO remove this once iterative fucntional.
+	//TODO
 	//!!WARNING: returns reference to mutable object.
+	//However, this method is private and causes no security leak at the driver level.
+	/**
+	 * Searches for a CellNode by serial number.
+	 * @param serialNumber
+	 * @return CellNode if found, null otherwise.
+	 */
 	private CellNode search(long serialNumber) {
-	  iteration++;
-	  if (head == null) return null;
-	  if (getCellPhone().getSerialNumber() == serialNumber) return this;
-	  if (pointer == null | getIteration() > size) return null;
-	  return pointer.search(serialNumber);
+	  CellNode curr = this;
+	  while(curr != null && iteration <= size) {
+		iteration++; 
+		if (curr.cellPhone.getSerialNumber() == serialNumber) return curr;
+		 curr = curr.pointer;
+	  	}
+	 return null; 
 	}
-	//TODO remove this once iterative fucntional.
+	  
+	/**
+	 * Internal print method, called by CellList's toString() method.
+	 * 
+	 */
 	private String iterPrint() {
 	  iteration = 0;
 	  String listToString = "";
@@ -145,7 +191,7 @@ private CellNode() {
   }///////////////////// END CLASS CELLNODE //////////////////////////////
   
   /**
-   * 
+   * Default Constructor for CellList.
    */
   public CellList() {
 	head = null;
@@ -153,15 +199,16 @@ private CellNode() {
   }
   
   /**
-   * 
+   * Copy Constructor for CellList, returns deep copy with unique serial numbers.
    * @param toCopy
    */
   public CellList(CellList toCopy) {
-	//TODO
+	head = toCopy.head.clone();
+	size = toCopy.size;
   }
   
   /**
-   * 
+   * Adds a CellNode to the start of CellList.
    * @param cellPhone
    */
   public void addToStart(CellPhone cellPhone) {
@@ -175,57 +222,122 @@ private CellNode() {
 	}
   }
   
+  /**
+   * Inserts a CellNode a speficed index.
+   * @param cellPhone
+   * @param index
+   */
   public void insertAtIndex(CellPhone cellPhone, int index) {
-	//TODO
 	try {
 	  if(index < 0 | index > (size)) throw new NoSuchElementException();
 	}
 	catch (NoSuchElementException e) {System.out.println("Error: NoSuchElementException \nProgram closing..");System.exit(1);}
-	if(index == 0) {addToStart(cellPhone);return;}
 	listIndex = 0;
+	if(index == 0) {
+	  addToStart(cellPhone);
+	  return;
+	}
+	if(index == getSize()) {
+	  head.moveTo(index-2).pointer.setPointer(new CellNode(cellPhone,null));
+	  size++;
+	  return;
+	}
 	CellNode before = head.moveTo(index-1);
 	CellNode current = before.getPointer();
 	CellNode insert = new CellNode(cellPhone,current);
 	before.setPointer(insert);
 	size++;
-	
-	
   }
  
-  public void deleteFromIndex(int index) {
-	//TODO
+  //TODO
+  //!!WARNING: returns reference to a mutable Object.
+  //To migitate must simply change return type to void.
+  //However this returned CellNode is useful to move CellNode from one list to another, 
+  //without changing CellPhone's serial number.
+  /**
+   * Deletes CellNode from specified index.
+   * @param index
+   * @return deleted CellNode
+   */
+  public CellNode deleteFromIndex(int index) {
+	if(head == null)
+	  return null;
 	try {
 	  if(index < 0 | index > (size-1)) throw new NoSuchElementException();
 	}
 	catch (NoSuchElementException e) {System.out.println("Error: NoSuchElementException \nProgram closing..");System.exit(1);}
+	if(index == 0 ) {
+	  CellNode toDelete = head;
+	  head = head.pointer;
+	  size--;
+	  return toDelete;
+	}
 	listIndex = 0;
 	CellNode before = head.moveTo(index-1);
 	CellNode toDelete = before.getPointer();
 	CellNode after = toDelete.getPointer();
 	before.setPointer(after);
 	size--;
+	return toDelete;
   }
   
-  public void deleteFromStart() {
-	//TODO
-	head = head.getPointer();
-	size--;
+  //TODO
+  //!!WARNING: returns reference to a mutable Object.
+  //To migitate must simply change return type to void.
+  //However this returned CellNode is useful to move CellNode from one list to another, 
+  //without changing CellPhone's serial number.
+  /**
+   * Deletes CellNode form start of CellList.
+   * @return deleted CellNode.
+   */
+  public CellNode deleteFromStart() {
+	
+	CellNode toDelete = head;
+	if(head != null) {
+	  head = head.getPointer();
+	  size--;
+	}
+	return toDelete;
   }
   
+  /**
+   * Swaps a CellNode with other Node at specified index.
+   * @param cellPhone of new CellNode.
+   * @param index
+   */
   public void replaceAtIndex(CellPhone cellPhone, int index) {
-	//TODO
+	if (head == null)
+	  return;
+	if(index < 0 | index >= size)
+	  return;
 	listIndex = 0;
 	CellNode toReplace = head.moveTo(index);
 	toReplace.setCellPhone(cellPhone);
   }
   
+  //
+  //TODO
+  //!!WARNING: returns reference to a mutable Object.
+  //To migitate must simply change return type to int, returning it's index.
+  //However, this return is useful if you want to move or delete CellNode you searched for.
+   /**
+    * 
+    * @param serialNumber
+    * @return
+    */
   public CellNode find(long serialNumber) {
     iteration = 0;
+    if(head == null) 
+      return null;
 	return head.search(serialNumber);
   }
   
+  /**
+   * Verifies if CellList contains a serial number.
+   * @param serialNumber
+   * @return true if serial found.
+   */
   public boolean contains(long serialNumber) {
-	//TODO Once add() functional, test deleting 'if(!head==null)', in theory search(), but null.search() might be illegal
 	iteration = 0;
 	if (!(head == null)) {
 	  if (head.search(serialNumber) != null) {return true;}
@@ -233,11 +345,12 @@ private CellNode() {
 	return false;
   }
   
+  /**
+   * Method to create CellList from text file.
+   * @param fr FileReader connected to input file.
+   */
   public void fileToCellList(Scanner fr) {
-	//TODO implement check to line, create and add CellPhone conditional on check.
-	int line = 0;
 	while(fr.hasNextLine()) {
-	  line++;
 	  long serial = fr.nextLong();
 	  String brand = fr.next();
 	  double price = fr.nextDouble();
@@ -250,6 +363,9 @@ private CellNode() {
 	fr.close();
   }
   
+  /**
+   * ToString method with header and size of CellList.
+   */
   public void showContents() {
 	System.out.println("The current size of the list is " + size + ". Here are the contents of the list:"
 		   + "\n=========================================================================\n"
@@ -276,7 +392,9 @@ private CellNode() {
   
   @Override
   public String toString() {
-   return head.iterPrint();
+	if (head == null)
+	  return "[X] ---> X";
+	return head.iterPrint();
   }
 
   public int getIteration() {
@@ -284,5 +402,18 @@ private CellNode() {
   }
   public int getSize() {
 	return size;
+  }
+
+ 
+  //TODO
+  //!!WARNING: returns reference to a mutable Object.
+  //Only used in tandem with the clone method. 
+  //To mitigate must make method private and have clone() call it instead.
+  /**
+   * Getter for a CellList's head node.
+   * @return first CellNode
+   */
+  public CellNode getHead() {
+	return head;
   }
 }
