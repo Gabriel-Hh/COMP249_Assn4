@@ -245,6 +245,7 @@ public class subDictionaryCreator {
   protected static void openSubDictionary() {
 	try {
 	  Desktop.getDesktop().open(outputFile);
+	  System.out.println(outputFile.getAbsolutePath());
 	} catch (IOException e) {
 	  System.out.println("Error: " + outputFile.getName() + " could be opened.");
 	  };
